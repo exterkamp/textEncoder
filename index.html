@@ -1,0 +1,99 @@
+<html>
+    <head>
+        <script src="lib/codemirror.js"></script>
+        <link rel="stylesheet" href="lib/codemirror.css">
+        <style>
+        body {
+            --line-height: 120px;
+            --main-font-size: 2.5rem;
+            font-size: var(--main-font-size);
+            background-color: #eaeaea;
+            max-width: 45rem;
+            margin: auto;
+            font-family: Sans-Serif;
+        }
+        /* main {
+            padding-top: var(--line-height);
+        } */
+        #output_editor {
+            height: var(--line-height);
+            width: 100%;
+            padding: 10px;
+        }
+        .header {
+            margin:1rem;
+        }
+        .btn_container {
+            margin: 1rem;
+        }
+        .CodeMirror {
+            height: var(--line-height);
+        }
+        button {
+            background-color: #bbbbbb;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        }
+        textarea {
+            resize: none;
+            font-size: var(--main-font-size);
+        }
+        footer {
+            font-size: 12px;
+            position: absolute;
+            bottom: 0;
+            right: 50%;
+        }
+        </style>
+    </head>
+    <body>
+        <main>
+            <div class="header">Type Here ⤵️</div>
+            <textarea id="input_editor"></textarea>
+            <div class="btn_container">
+                <button id="base64">Base 64</button>
+                <button id="uri">URI Encode</button>
+            </div>
+            <textarea id="output_editor" readonly></textarea>
+            <div class="btn_container">
+                <button id="copy" onclick="copyOutput()">Copy</button>
+            </div>
+        </main>
+    </body>
+    <script>
+        const base64Encode = function (s) {
+            return window.btoa(s);
+        }
+        const uriEncode = function (s) {
+            return encodeURIComponent(s);
+        }
+        function copyOutput() {
+            var copyText = document.getElementById("output_editor");
+            copyText.focus();
+            copyText.select();
+            document.execCommand("copy");
+        }
+        var conversionFunction = base64Encode;
+        var editor = CodeMirror.fromTextArea(document.getElementById("input_editor"), {
+            lineNumbers: true,
+            matchBrackets: true
+        });
+        document.getElementById("base64").addEventListener("click", function () {
+            conversionFunction = base64Encode;
+            document.getElementById("output_editor").innerHTML = conversionFunction(editor.getValue());
+        });
+        document.getElementById("uri").addEventListener("click", function () {
+            conversionFunction = uriEncode;
+            document.getElementById("output_editor").innerHTML = conversionFunction(editor.getValue());
+        });
+        editor.on("change", function(cm, change) {
+            document.getElementById("output_editor").innerHTML = conversionFunction(editor.getValue());
+        });
+    </script>
+</html>
