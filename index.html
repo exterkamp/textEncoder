@@ -84,7 +84,8 @@
         var conversionFunction = base64Encode;
         var editor = CodeMirror.fromTextArea(document.getElementById("input_editor"), {
             lineNumbers: true,
-            matchBrackets: true
+            matchBrackets: true,
+            lineWrapping: true,
         });
         document.getElementById("base64").addEventListener("click", function () {
             conversionFunction = base64Encode;
